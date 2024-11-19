@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
-import bannerOne from "../../assets/banner-1.webp";
-import bannerTwo from "../../assets/banner-2.webp";
-import bannerThree from "../../assets/banner-3.webp";
+import bannerOne from "../../assets/catalogo/1.webp";
+import bannerTwo from "../../assets/catalogo/2.jpg.avif";
+import bannerThree from "../../assets/catalogo/3.jpg.avif";
+import bannerFour from "../../assets/catalogo/logo creart.png";
+
 import {
   Airplay,
   BabyIcon,
@@ -32,20 +34,20 @@ import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
 
 const categoriesWithIcon = [
-  { id: "men", label: "Men", icon: ShirtIcon },
-  { id: "women", label: "Women", icon: CloudLightning },
-  { id: "kids", label: "Kids", icon: BabyIcon },
-  { id: "accessories", label: "Accessories", icon: WatchIcon },
-  { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
+  { id: "men", label: "Fotografias", icon: Airplay },
+  { id: "women", label: "Oleo", icon: CloudLightning },
+  { id: "kids", label: "Marcos", icon:Images  },
+  { id: "accessories", label: "Colaboradores", icon: BabyIcon },
+  { id: "footwear", label: "Eventos", icon: UmbrellaIcon },
 ];
 
 const brandsWithIcon = [
-  { id: "nike", label: "Nike", icon: Shirt },
-  { id: "adidas", label: "Adidas", icon: WashingMachine },
-  { id: "puma", label: "Puma", icon: ShoppingBasket },
-  { id: "levi", label: "Levi's", icon: Airplay },
-  { id: "zara", label: "Zara", icon: Images },
-  { id: "h&m", label: "H&M", icon: Heater },
+  { id: "nike", label: "Oleo", icon: Heater },
+  { id: "adidas", label: "Canva Americana", icon: WashingMachine },
+  { id: "puma", label: "Canva Algodon", icon: ShoppingBasket },
+  { id: "levi", label: "Embellecidos", icon: Airplay },
+  { id: "zara", label: "Marcos", icon: Images },
+  { id: "h&m", label: "Fotografias", icon: Heater },
 ];
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -59,7 +61,9 @@ function ShoppingHome() {
   const featureImageList = [
     { image: bannerOne },
     { image: bannerTwo },
-    { image: bannerThree }
+    { image: bannerThree },
+    { image: bannerFour }
+
   ];
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);

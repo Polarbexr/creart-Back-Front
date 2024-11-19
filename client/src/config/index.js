@@ -58,11 +58,11 @@ export const addProductFormElements = [
     name: "category",
     componentType: "select",
     options: [
-      { id: "men", label: "Men" },
-      { id: "women", label: "Women" },
-      { id: "kids", label: "Kids" },
-      { id: "accessories", label: "Accessories" },
-      { id: "footwear", label: "Footwear" },
+      { id: "men", label: "Fotografias" },
+      { id: "women", label: "Oleos" },
+      { id: "kids", label: "Marcos" },
+      { id: "accessories", label: "Colaboradores" },
+      { id: "footwear", label: "Eventos" },
     ],
   },
   {
@@ -70,12 +70,12 @@ export const addProductFormElements = [
     name: "brand",
     componentType: "select",
     options: [
-      { id: "nike", label: "Nike" },
-      { id: "adidas", label: "Adidas" },
-      { id: "puma", label: "Puma" },
-      { id: "levi", label: "Levi's" },
-      { id: "zara", label: "Zara" },
-      { id: "h&m", label: "H&M" },
+      { id: "nike", label: "Oleos" },
+      { id: "adidas", label: "Canva Americana" },
+      { id: "puma", label: "Canva Algodon" },
+      { id: "levi", label: "Embellecidos" },
+      { id: "zara", label: "Marcos" },
+      { id: "h&m", label: "Fotografias" },
     ],
   },
   {
@@ -114,27 +114,27 @@ export const shoppingViewHeaderMenuItems = [
   },
   {
     id: "men",
-    label: "Men",
+    label: "Fotografias",
     path: "/shop/listing",
   },
   {
     id: "women",
-    label: "Women",
+    label: "Oleo",
     path: "/shop/listing",
   },
   {
     id: "kids",
-    label: "Kids",
+    label: "Marcos",
     path: "/shop/listing",
   },
   {
     id: "footwear",
-    label: "Footwear",
+    label: "Eventos",
     path: "/shop/listing",
   },
   {
     id: "accessories",
-    label: "Accessories",
+    label: "Colaboradores",
     path: "/shop/listing",
   },
   {
@@ -145,37 +145,36 @@ export const shoppingViewHeaderMenuItems = [
 ];
 
 export const categoryOptionsMap = {
-  men: "Men",
-  women: "Women",
-  kids: "Kids",
+  men: "Fotografias",
+  women: "Oleos",
+  kids: "Marcos",
   accessories: "Accessories",
-  footwear: "Footwear",
+  footwear: "Eventos",
 };
 
 export const brandOptionsMap = {
-  nike: "Nike",
-  adidas: "Adidas",
-  puma: "Puma",
-  levi: "Levi",
-  zara: "Zara",
-  "h&m": "H&M",
+  nike: "Oleos",
+  adidas: "Canva Americana",
+  puma: "Canva Algodon",
+  levi: "Embellecidos",
+  zara: "Marcos",  
 };
 
 export const filterOptions = {
   category: [
-    { id: "men", label: "Men" },
-    { id: "women", label: "Women" },
-    { id: "kids", label: "Kids" },
-    { id: "accessories", label: "Accessories" },
-    { id: "footwear", label: "Footwear" },
+    { id: "men", label: "Fotografias" },
+    { id: "women", label: "Oleos" },
+    { id: "kids", label: "Marcos" },
+    { id: "accessories", label: "Colaboradores" },
+    { id: "footwear", label: "Eventos" },
   ],
   brand: [
-    { id: "nike", label: "Nike" },
-    { id: "adidas", label: "Adidas" },
-    { id: "puma", label: "Puma" },
-    { id: "levi", label: "Levi's" },
-    { id: "zara", label: "Zara" },
-    { id: "h&m", label: "H&M" },
+    { id: "nike", label: "Oleos" },
+    { id: "adidas", label: "Canva Americana" },
+    { id: "puma", label: "Canva Algodon" },
+    { id: "levi", label: "Embellecidos" },
+    { id: "zara", label: "Marcos" },
+    { id: "h&m", label: "Fotografias" },
   ],
 };
 

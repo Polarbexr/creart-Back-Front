@@ -19,11 +19,28 @@ const commonFeatureRouter = require("./routes/common/feature-routes");
 //create a separate file for this and then import/use that file here
 
 mongoose
-  .connect('mongodb+srv://2121100624:2121100624@cluster0.k161o.mongodb.net/')
+//  .connect('mongodb+srv://2121100624:2121100624@cluster0.k161o.mongodb.net/')
+  .connect('mongodb+srv://2120200402:1q2w3e4r5t6y@cluster0.0reth.mongodb.net/')
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.log(error));
 
 const app = express();
+//CAMBIAR TODOS TUS PUERTOS POR EL LIBRE (YO LO CAMBIE) AL 5001 en los INDEX que aparecen en el src>store>store
+/**
+import adminProductsSlice from "./admin/products-slice";
+import adminOrderSlice from "./admin/order-slice";
+
+import shopProductsSlice from "./shop/products-slice";
+import shopCartSlice from "./shop/cart-slice";
+import shopAddressSlice from "./shop/address-slice";
+import shopOrderSlice from "./shop/order-slice";
+import shopSearchSlice from "./shop/search-slice";
+import shopReviewSlice from "./shop/review-slice";
+import commonFeatureSlice from "./common-slice";
+ */
+
+
+//CAMBAIR CREDENCIALES DE PAYPAL SI SE CAMBIA DE CUENTA EN  HELPERS>PAYPAL>PAYPAL
 const PORT = process.env.PORT || 5000;
 
 app.use(
