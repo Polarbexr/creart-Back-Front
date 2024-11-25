@@ -20,7 +20,7 @@ import {
 import { Badge } from "../ui/badge";
 
 function ShoppingOrders() {
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);  
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { orderList, orderDetails } = useSelector((state) => state.shopOrder);

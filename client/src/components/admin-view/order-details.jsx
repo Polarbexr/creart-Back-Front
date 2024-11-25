@@ -11,6 +11,8 @@ import {
   updateOrderStatus,
 } from "@/store/admin/order-slice";
 import { useToast } from "../ui/use-toast";
+import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 
 const initialFormData = {
   status: "",
@@ -22,8 +24,7 @@ function AdminOrderDetailsView({ orderDetails }) {
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  console.log(orderDetails, "orderDetailsorderDetails");
-
+  // Función para manejar la actualización de estado
   function handleUpdateStatus(event) {
     event.preventDefault();
     const { status } = formData;
@@ -41,6 +42,44 @@ function AdminOrderDetailsView({ orderDetails }) {
       }
     });
   }
+
+  // Función para exportar a PDF
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Order Details", 20, 10);
+    doc.text(`Order ID: ${orderDetails?._id}`, 20, 20);
+    doc.text(`Order Date: ${orderDetails?.orderDate.split("T")[0]}`, 20, 30);
+    doc.text(`Order Price: $${orderDetails?.totalAmount}`, 20, 40);
+    doc.text(`Payment Method: ${orderDetails?.paymentMethod}`, 20, 50);
+    doc.text(`Payment Status: ${orderDetails?.paymentStatus}`, 20, 60);
+    doc.text(`Order Status: ${orderDetails?.orderStatus}`, 20, 70);
+    doc.text("Order Items:", 20, 80);
+
+    let yPosition = 90;
+    orderDetails?.cartItems?.forEach((item) => {
+      doc.text(`Title: ${item.title}`, 20, yPosition);
+      doc.text(`Quantity: ${item.quantity}`, 100, yPosition);
+      doc.text(`Price: $${item.price}`, 160, yPosition);
+      yPosition += 10;
+    });
+
+    doc.save("order_details.pdf");
+  };
+
+  // Función para exportar a Excel
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(
+      orderDetails?.cartItems.map((item) => ({
+        Title: item.title,
+        Quantity: item.quantity,
+        Price: item.price,
+      }))
+    );
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Order Details");
+    XLSX.writeFile(wb, "order_details.xlsx");
+  };
 
   return (
     <DialogContent className="sm:max-w-[600px]">
@@ -135,6 +174,24 @@ function AdminOrderDetailsView({ orderDetails }) {
             buttonText={"Update Order Status"}
             onSubmit={handleUpdateStatus}
           />
+        </div>
+
+        {/* Botones para exportar a PDF y Excel */}
+        <div className="mt-4 flex gap-4">
+          <button
+            type="button"
+            onClick={exportToPDF}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          >
+            Export to PDF
+          </button>
+          <button
+            type="button"
+            onClick={exportToExcel}
+            className="bg-green-500 text-white px-4 py-2 rounded-md"
+          >
+            Export to Excel
+          </button>
         </div>
       </div>
     </DialogContent>

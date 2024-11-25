@@ -12,8 +12,6 @@ import {
   CloudLightning,
   Heater,
   Images,
-  Shirt,
-  ShirtIcon,
   ShoppingBasket,
   UmbrellaIcon,
   WashingMachine,
