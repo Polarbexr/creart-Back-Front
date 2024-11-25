@@ -13,3 +13,4 @@ router.get("/details/:id", getOrderDetailsForAdmin);
 router.put("/update/:id", updateOrderStatus);
 
 module.exports = router;
+//Estas son las rutas
