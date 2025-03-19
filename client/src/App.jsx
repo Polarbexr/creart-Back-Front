@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import { Login } from "./components/front/Login";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -59,6 +60,8 @@ function App() {
         >
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
+          <Route path="authLogin" element={<Login />} />
+
         </Route>
         <Route
           path="/admin"

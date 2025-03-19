@@ -1,19 +1,27 @@
 import { Outlet } from "react-router-dom";
+import { Nav } from "../front/nav";
+import { Header } from "../front/Header";
+import { CardSection } from "../front/Card";
+import {Slide} from "../front/Slide"
+import { Footer } from "../front/Footer";
+import { ProjectCard } from "../front/ProjectCard";
+import banner12 from "../../assets/catalogo/banner12.png";
+import banner9 from "../../assets/catalogo/banner9.png";
+
 
 function AuthLayout() {
+
   return (
-    <div className="flex min-h-screen w-full">
-      <div className="hidden lg:flex items-center justify-center bg-black w-1/2 px-12">
-        <div className="max-w-md space-y-6 text-center text-primary-foreground">
-          <h1 className="text-4xl font-extrabold tracking-tight">
-            Welcome to Shopping the Art the Crea-Art
-          </h1>
-        </div>
+      <div>
+            <Nav />
+            <Header/>
+            <CardSection/>
+            <Slide imageUrl={banner9}/>
+            <ProjectCard title={"Desarrollo de la mano con Laplace Software"} description={"Proyecto de desarrollo de software donde se pretenede automatizar servicios de veterinaria asi como implementar el uso de una aplicacion movil para la venta de productos online."} participants={"Laplace software, GoodPet"}/>
+            <Slide imageUrl={banner12}/>
+            {/* <Outlet/> */}
+            <Footer/>
       </div>
-      <div className="flex flex-1 items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
-        <Outlet />
-      </div>
-    </div>
   );
 }
 

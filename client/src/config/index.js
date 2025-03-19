@@ -41,32 +41,32 @@ export const loginFormControls = [
 
 export const addProductFormElements = [
   {
-    label: "Title",
+    label: "Nombre",
     name: "title",
     componentType: "input",
     type: "text",
-    placeholder: "Enter product title",
+    placeholder: "Nombre / Producto",
   },
   {
-    label: "Description",
+    label: "Descripcion",
     name: "description",
     componentType: "textarea",
-    placeholder: "Enter product description",
+    placeholder: "Descripcion del producto",
   },
   {
-    label: "Category",
+    label: "Categoria",
     name: "category",
     componentType: "select",
     options: [
-      { id: "men", label: "Fotografias" },
-      { id: "women", label: "Oleos" },
-      { id: "kids", label: "Marcos" },
-      { id: "accessories", label: "Colaboradores" },
-      { id: "footwear", label: "Eventos" },
+      { id: "men", label: "Ropa" },
+      { id: "women", label: "Alimentos" },
+      { id: "kids", label: "Medicamnetos" },
+      { id: "accessories", label: "Juguetes" },
+      { id: "footwear", label: "Accesorios" },
     ],
   },
   {
-    label: "Brand",
+    label: "SubCategoria",
     name: "brand",
     componentType: "select",
     options: [
@@ -79,21 +79,21 @@ export const addProductFormElements = [
     ],
   },
   {
-    label: "Price",
+    label: "Precio",
     name: "price",
     componentType: "input",
     type: "number",
     placeholder: "Enter product price",
   },
   {
-    label: "Sale Price",
+    label: "Precio de promocion",
     name: "salePrice",
     componentType: "input",
     type: "number",
     placeholder: "Enter sale price (optional)",
   },
   {
-    label: "Total Stock",
+    label: "Total en inventario",
     name: "totalStock",
     componentType: "input",
     type: "number",
