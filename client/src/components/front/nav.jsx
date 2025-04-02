@@ -2,42 +2,39 @@ import { useNavigate } from "react-router-dom";
 
 export const Nav = () => {
   const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/auth/login");
+  };
+
   return (
-
     <div className="w-full h-16 bg-gray-900 text-white flex items-center p-4">
-    {/* Icono */}
-    <div className="flex items-center mr-8">
-      {/* <User className="w-8 h-8 mr-2" /> */}
-      <span className="text-xl font-semibold">GoodPet</span>
-    </div>
+      {/* Icono y Link de descarga */}
+      <div className="flex items-center mr-8 space-x-4">
+        <span className="text-xl font-semibold">GoodPet</span>
+        {/* Link de descarga */}
+        <a
+          href="../../assets/exe/Juego2D.exe"
+          download
+          className="text-green-400 hover:underline"
+        >
+          Descargar Juego
+        </a>
+      </div>
 
-    {/* Pestañas */}
-    <nav className="flex space-x-6">
-      <a href="#" className="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded-lg">
-        {/* <Home className="w-5 h-5" /> */}
-        <span>Inicio</span>
-      </a>
-      <a href="#" className="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded-lg">
-        {/* <Info className="w-5 h-5" /> */}
-        <span>Nosotros</span>
-      </a>
-      <a href="#" className="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded-lg">
-        {/* <Box className="w-5 h-5" /> */}
-        <span>Productos</span>
-      </a>
-      <a href="#" className="flex items-center space-x-2 hover:bg-gray-800 p-2 rounded-lg">
-        {/* <Info className="w-5 h-5" /> */}
-        <span>Información</span>
-      </a>
-    </nav>
+      {/* Pestañas */}
+      <nav className="flex space-x-6"></nav>
 
-    {/* Botón de inicio de sesión */}
-    <div className="ml-auto">
-      <button onClick={navigate("/authLogin ")} className="flex items-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">
-        {/* <LogIn className="w-5 h-5 mr-2" /> */}
-        Iniciar sesión
-      </button>
+      {/* Botones */}
+      <div className="ml-auto flex space-x-6">
+        {/* Botón de inicio de sesión */}
+        <button
+          onClick={handleLogin}
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-lg shadow-blue-500/50 border border-blue-300 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-blue-700/50"
+        >
+          Iniciar sesión
+        </button>
+      </div>
     </div>
-  </div>
-      );  
-}
+  );
+};

@@ -18,23 +18,25 @@ import {
   resetOrderDetails,
 } from "@/store/admin/order-slice";
 import { Badge } from "../ui/badge";
-import * as XLSX from "xlsx"; // Importar xlsx para la generación de Excel
+import * as XLSX from "xlsx";
+import { PieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+
+const COLORS = ["#4CAF50", "#F44336", "#FF9800", "#2196F3"];
 
 function AdminOrdersView() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
 
-  // Función para calcular ventas diarias, totales semanales y mensuales
   const calculateSales = () => {
     const dailySales = {};
     let weeklyTotal = 0;
     let monthlyTotal = 0;
-    let totalAmount = 0; // Variable para el total de las órdenes
+    let totalAmount = 0;
 
     const currentDate = new Date();
     const currentWeek = getWeekNumber(currentDate);
-    const currentMonth = currentDate.getMonth(); // 0 es enero, 1 es febrero, etc.
+    const currentMonth = currentDate.getMonth();
 
     orderList.forEach((order) => {
       const orderDate = new Date(order?.orderDate);
@@ -42,60 +44,34 @@ function AdminOrdersView() {
       const orderWeek = getWeekNumber(orderDate);
       const orderMonth = orderDate.getMonth();
 
-      // Sumar ventas diarias
       const orderDateString = orderDate.toISOString().split("T")[0];
-      if (dailySales[orderDateString]) {
-        dailySales[orderDateString] += orderAmount;
-      } else {
-        dailySales[orderDateString] = orderAmount;
-      }
+      dailySales[orderDateString] = (dailySales[orderDateString] || 0) + orderAmount;
 
-      // Sumar al total semanal si la orden es de la misma semana
-      if (orderWeek === currentWeek) {
-        weeklyTotal += orderAmount;
-      }
-
-      // Sumar al total mensual si la orden es del mismo mes
-      if (orderMonth === currentMonth) {
-        monthlyTotal += orderAmount;
-      }
-
-      // Sumar al total general
+      if (orderWeek === currentWeek) weeklyTotal += orderAmount;
+      if (orderMonth === currentMonth) monthlyTotal += orderAmount;
       totalAmount += orderAmount;
     });
 
     return { dailySales, weeklyTotal, monthlyTotal, totalAmount };
   };
 
-  // Función para obtener el número de la semana del año
   const getWeekNumber = (date) => {
     const startDate = new Date(date.getFullYear(), 0, 1);
     const diff = date - startDate;
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay / 7);
+    return Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
   };
 
-  // Generar y descargar reporte en Excel
   const handleExportExcel = () => {
     const { dailySales, weeklyTotal, monthlyTotal } = calculateSales();
-
-    // Crear datos para Excel
     const data = [
       { Date: "Date", Sales: "Daily Sales" },
-      ...Object.entries(dailySales).map(([date, sales]) => ({
-        Date: date,
-        Sales: sales,
-      })),
+      ...Object.entries(dailySales).map(([date, sales]) => ({ Date: date, Sales: sales })),
       { Date: "Total Weekly Sales", Sales: weeklyTotal },
       { Date: "Total Monthly Sales", Sales: monthlyTotal },
     ];
-
-    // Crear hoja de Excel
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sales Report");
-
-    // Exportar archivo
     XLSX.writeFile(workbook, "Sales_Report.xlsx");
   };
 
@@ -111,101 +87,159 @@ function AdminOrdersView() {
     if (orderDetails !== null) setOpenDetailsDialog(true);
   }, [orderDetails]);
 
-  const { totalAmount, weeklyTotal, monthlyTotal } = calculateSales(); // Obtener totales
+  const { totalAmount, weeklyTotal, monthlyTotal } = calculateSales();
+
+  const processOrderData = () => {
+    const statusCounts = { delivered: 0, rejected: 0, pending: 0 };
+    orderList.forEach((order) => {
+      statusCounts[order.orderStatus] = (statusCounts[order.orderStatus] || 0) + 1;
+    });
+    return Object.keys(statusCounts).map((key) => ({
+      name: key.charAt(0).toUpperCase() + key.slice(1),
+      value: statusCounts[key],
+    }));
+  };
+
+  const pieData = processOrderData();
+
+  const processApprovedOrdersData = () => {
+    const approvedSalesByDate = {};
+
+    orderList.forEach((order) => {
+      if (order.orderStatus === "delivered") {
+        const orderDate = new Date(order?.orderDate);
+        const orderDateString = orderDate.toISOString().split("T")[0];
+        approvedSalesByDate[orderDateString] = (approvedSalesByDate[orderDateString] || 0) + order?.totalAmount;
+      }
+    });
+
+    return Object.entries(approvedSalesByDate).map(([date, sales]) => ({
+      date,
+      sales,
+    }));
+  };
+
+  const processRejectedOrdersData = () => {
+    const rejectedSalesByDate = {};
+
+    orderList.forEach((order) => {
+      if (order.orderStatus === "rejected") {
+        const orderDate = new Date(order?.orderDate);
+        const orderDateString = orderDate.toISOString().split("T")[0];
+        rejectedSalesByDate[orderDateString] = (rejectedSalesByDate[orderDateString] || 0) + order?.totalAmount;
+      }
+    });
+
+    return Object.entries(rejectedSalesByDate).map(([date, sales]) => ({
+      date,
+      sales,
+    }));
+  };
+
+  const approvedOrdersData = processApprovedOrdersData();
+  const rejectedOrdersData = processRejectedOrdersData();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>All Orders</CardTitle>
+        <CardTitle>Todas las ordenes</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
+              <TableHead>Id de orden</TableHead>
+              <TableHead>Fecha de orden</TableHead>
+              <TableHead>Estatus de orden</TableHead>
+              <TableHead>Total de orden</TableHead>
               <TableHead>
                 <span className="sr-only">Details</span>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orderList && orderList.length > 0
-              ? orderList.map((orderItem) => (
-                  <TableRow key={orderItem?._id}>
-                    <TableCell>{orderItem?._id}</TableCell>
-                    <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
-                            ? "bg-green-500"
-                            : orderItem?.orderStatus === "rejected"
-                            ? "bg-red-600"
-                            : "bg-black"
-                        }`}
-                      >
-                        {orderItem?.orderStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
-                    <TableCell>
-                      <Dialog
-                        open={openDetailsDialog}
-                        onOpenChange={() => {
-                          setOpenDetailsDialog(false);
-                          dispatch(resetOrderDetails());
-                        }}
-                      >
-                        <Button
-                          onClick={() =>
-                            handleFetchOrderDetails(orderItem?._id)
-                          }
-                        >
-                          View Details
-                        </Button>
-                        <AdminOrderDetailsView orderDetails={orderDetails} />
-                      </Dialog>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : null}
-
-            {/* Fila con el total de las órdenes */}
-            <TableRow>
-              <TableCell colSpan={3} className="text-right font-bold">
-                Total Order Price:
-              </TableCell>
-              <TableCell>${totalAmount}</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-
-            {/* Corte semanal */}
-            <TableRow>
-              <TableCell colSpan={3} className="text-right font-bold">
-                Total Weekly Sales:
-              </TableCell>
-              <TableCell>${weeklyTotal}</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-
-            {/* Corte mensual */}
-            <TableRow>
-              <TableCell colSpan={3} className="text-right font-bold">
-                Total Monthly Sales:
-              </TableCell>
-              <TableCell>${monthlyTotal}</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
+            {orderList.map((orderItem) => (
+              <TableRow key={orderItem?._id}>
+                <TableCell>{orderItem?._id}</TableCell>
+                <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
+                <TableCell>
+                  <Badge
+                    className={`py-1 px-3 ${
+                      orderItem?.orderStatus === "delivered"
+                        ? "bg-green-500"
+                        : orderItem?.orderStatus === "rejected"
+                        ? "bg-red-600"
+                        : orderItem?.orderStatus === "inProcess"
+                        ? "bg-blue-500"
+                        : "bg-yellow-500"
+                    }`}
+                  >
+                    {orderItem?.orderStatus}
+                  </Badge>
+                </TableCell>
+                <TableCell>${orderItem?.totalAmount}</TableCell>
+                <TableCell>
+                  <Dialog
+                    open={openDetailsDialog}
+                    onOpenChange={() => {
+                      setOpenDetailsDialog(false);
+                      dispatch(resetOrderDetails());
+                    }}
+                  >
+                    <Button onClick={() => handleFetchOrderDetails(orderItem?._id)}>
+                      Ver detalles
+                    </Button>
+                    <AdminOrderDetailsView orderDetails={orderDetails} />
+                  </Dialog>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
-          <Button onClick={handleExportExcel}>Download Sales Report</Button>
-
         </Table>
+
+
+        <div className="flex flex-wrap justify-between space-x-4">
+          {/* Gráfico de Órdenes Entregadas */}
+          <div className="w-full sm:w-[30%] mb-8 sm:mb-0">
+            <PieChart width={400} height={300}>
+              <Pie data={pieData} cx={200} cy={150} outerRadius={100} fill="#8884d8" dataKey="value" label>
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </div>
+
+          {/* Gráfico de Órdenes Aprobadas */}
+          <div className="w-full sm:w-[30%] mb-8 sm:mb-0">
+            <BarChart width={400} height={300} data={approvedOrdersData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="sales" fill="#4CAF50" />
+            </BarChart>
+          </div>
+
+          {/* Gráfico de Órdenes Rechazadas */}
+          <div className="w-full sm:w-[30%]">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={rejectedOrdersData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="sales" stroke="#F44336" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </CardContent>
     </Card>
-    
   );
 }
 

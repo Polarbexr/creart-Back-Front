@@ -90,7 +90,7 @@ function ShoppingOrders() {
                             handleFetchOrderDetails(orderItem?._id)
                           }
                         >
-                          View Details
+                         Ver detalles
                         </Button>
                         <ShoppingOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>

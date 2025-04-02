@@ -43,27 +43,57 @@ function AdminOrderDetailsView({ orderDetails }) {
     });
   }
 
-  // Función para exportar a PDF
+  // Función para exportar a PDF con formato de ticket
   const exportToPDF = () => {
     const doc = new jsPDF();
-    doc.text("Order Details", 20, 10);
-    doc.text(`Order ID: ${orderDetails?._id}`, 20, 20);
-    doc.text(`Order Date: ${orderDetails?.orderDate.split("T")[0]}`, 20, 30);
-    doc.text(`Order Price: $${orderDetails?.totalAmount}`, 20, 40);
-    doc.text(`Payment Method: ${orderDetails?.paymentMethod}`, 20, 50);
-    doc.text(`Payment Status: ${orderDetails?.paymentStatus}`, 20, 60);
-    doc.text(`Order Status: ${orderDetails?.orderStatus}`, 20, 70);
-    doc.text("Order Items:", 20, 80);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    
+    // Título y líneas decorativas
+    doc.setTextColor(0, 0, 0);
+    doc.text("TICKET DE PEDIDO", 20, 10);
+    doc.text("**************************************", 20, 15);
+    
+    // Detalles del pedido
+    doc.text(`ID del pedido: ${orderDetails?._id}`, 20, 25);
+    doc.text(`Fecha: ${orderDetails?.orderDate.split("T")[0]}`, 20, 30);
+    doc.text(`Total: $${orderDetails?.totalAmount}`, 20, 35);
+    doc.text(`Método de pago: ${orderDetails?.paymentMethod}`, 20, 40);
+    doc.text(`Estado de pago: Pagado`, 20, 45);
 
-    let yPosition = 90;
+    // Estado de la orden con color
+    doc.setTextColor(
+      orderDetails?.orderStatus === "confirmed"
+        ? 0
+        : orderDetails?.orderStatus === "rejected"
+        ? 255
+        : 0
+    );
+    doc.text(`Estatus: ${orderDetails?.orderStatus}`, 20, 50);
+    doc.setTextColor(0, 0, 0); // Reset color
+    
+    // Línea decorativa
+    doc.text("**************************************", 20, 55);
+    
+    // Detalles de los productos
+    doc.text("Productos:", 20, 60);
+    let yPosition = 65;
     orderDetails?.cartItems?.forEach((item) => {
-      doc.text(`Title: ${item.title}`, 20, yPosition);
-      doc.text(`Quantity: ${item.quantity}`, 100, yPosition);
-      doc.text(`Price: $${item.price}`, 160, yPosition);
-      yPosition += 10;
+      doc.text(`Nombre: ${item.title}`, 20, yPosition);
+      doc.text(`Cantidad: ${item.quantity}`, 100, yPosition);
+      doc.text(`Precio: $${item.price}`, 140, yPosition);
+      yPosition += 6;
     });
-
-    doc.save("order_details.pdf");
+    
+    // Línea final
+    doc.text("**************************************", 20, yPosition + 5);
+    doc.text(`Sucursal: ${user.userName}`, 20, yPosition + 10);
+    doc.text(`${orderDetails?.addressInfo?.address}`, 20, yPosition + 15);
+    doc.text(`${orderDetails?.addressInfo?.city} ${orderDetails?.addressInfo?.pincode}`, 20, yPosition + 20);
+    doc.text(`${orderDetails?.addressInfo?.phone}`, 20, yPosition + 25);
+    
+    // Guardar el PDF
+    doc.save("ticket_pedido.pdf");
   };
 
   // Función para exportar a Excel
@@ -85,28 +115,24 @@ function AdminOrderDetailsView({ orderDetails }) {
     <DialogContent className="sm:max-w-[600px]">
       <div className="grid gap-6">
         <div className="grid gap-2">
-          <div className="flex mt-6 items-center justify-between">
-            <p className="font-medium">Order ID</p>
-            <Label>{orderDetails?._id}</Label>
-          </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Order Date</p>
+            <p className="font-medium">Fecha de pedido</p>
             <Label>{orderDetails?.orderDate.split("T")[0]}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Order Price</p>
+            <p className="font-medium">Total</p>
             <Label>${orderDetails?.totalAmount}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Payment method</p>
+            <p className="font-medium">Metodo de pago</p>
             <Label>{orderDetails?.paymentMethod}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Payment Status</p>
-            <Label>{orderDetails?.paymentStatus}</Label>
+            <p className="font-medium">Estatus de pago</p>
+            <Label>Pagado</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
-            <p className="font-medium">Order Status</p>
+            <p className="font-medium">Estado de pedido</p>
             <Label>
               <Badge
                 className={`py-1 px-3 ${
@@ -125,14 +151,14 @@ function AdminOrderDetailsView({ orderDetails }) {
         <Separator />
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <div className="font-medium">Order Details</div>
+            <div className="font-medium">Detalles</div>
             <ul className="grid gap-3">
               {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
                 ? orderDetails?.cartItems.map((item) => (
                     <li className="flex items-center justify-between">
-                      <span>Title: {item.title}</span>
-                      <span>Quantity: {item.quantity}</span>
-                      <span>Price: ${item.price}</span>
+                      <span>Detalle: {item.title}</span>
+                      <span>Cantidad: {item.quantity}</span>
+                      <span>Precio: ${item.price}</span>
                     </li>
                   ))
                 : null}
@@ -141,14 +167,13 @@ function AdminOrderDetailsView({ orderDetails }) {
         </div>
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <div className="font-medium">Shipping Info</div>
+            <div className="font-medium">Informacion de la sucursal</div>
             <div className="grid gap-0.5 text-muted-foreground">
               <span>{user.userName}</span>
               <span>{orderDetails?.addressInfo?.address}</span>
               <span>{orderDetails?.addressInfo?.city}</span>
               <span>{orderDetails?.addressInfo?.pincode}</span>
               <span>{orderDetails?.addressInfo?.phone}</span>
-              <span>{orderDetails?.addressInfo?.notes}</span>
             </div>
           </div>
         </div>
@@ -157,21 +182,19 @@ function AdminOrderDetailsView({ orderDetails }) {
           <CommonForm
             formControls={[
               {
-                label: "Order Status",
+                label: "Estatus del pedido",
                 name: "status",
                 componentType: "select",
                 options: [
-                  { id: "pending", label: "Pending" },
-                  { id: "inProcess", label: "In Process" },
-                  { id: "inShipping", label: "In Shipping" },
-                  { id: "delivered", label: "Delivered" },
-                  { id: "rejected", label: "Rejected" },
+                  { id: "inProcess", label: "En proceso" },
+                  { id: "delivered", label: "Entregado" },
+                  { id: "rejected", label: "Rechazado" },
                 ],
               },
             ]}
             formData={formData}
             setFormData={setFormData}
-            buttonText={"Update Order Status"}
+            buttonText={"Actualizar estado de pedido"}
             onSubmit={handleUpdateStatus}
           />
         </div>
@@ -183,15 +206,9 @@ function AdminOrderDetailsView({ orderDetails }) {
             onClick={exportToPDF}
             className="bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Export to PDF
+            Exportar PDF
           </button>
-          <button
-            type="button"
-            onClick={exportToExcel}
-            className="bg-green-500 text-white px-4 py-2 rounded-md"
-          >
-            Export to Excel
-          </button>
+          
         </div>
       </div>
     </DialogContent>

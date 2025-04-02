@@ -22,34 +22,27 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
-import { Login } from "./components/front/Login";
+import { HomePage } from "./components/front/Home";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
   );
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />;
-
-  console.log(isLoading, user);
+  if (isLoading) return <Skeleton className="w-[800px] bg-black h-[600px]" />;
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
-        <Route
-          path="/"
-          element={
-            <CheckAuth
-              isAuthenticated={isAuthenticated}
-              user={user}
-            ></CheckAuth>
-          }
-        />
+        {/* Nueva pantalla principal */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* Rutas de autenticación */}
         <Route
           path="/auth"
           element={
@@ -60,9 +53,9 @@ function App() {
         >
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
-          <Route path="authLogin" element={<Login />} />
-
         </Route>
+
+        {/* Rutas de administración */}
         <Route
           path="/admin"
           element={
@@ -76,6 +69,8 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
         </Route>
+
+        {/* Rutas de tienda */}
         <Route
           path="/shop"
           element={
@@ -92,7 +87,11 @@ function App() {
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
         </Route>
+
+        {/* Página no autorizado */}
         <Route path="/unauth-page" element={<UnauthPage />} />
+
+        {/* Página no encontrada */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

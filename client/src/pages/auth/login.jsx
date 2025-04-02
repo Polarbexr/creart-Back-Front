@@ -5,6 +5,7 @@ import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const initialState = {
   email: "",
@@ -34,29 +35,50 @@ function AuthLogin() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Sign in to your account
-        </h1>
-        <p className="mt-2">
-          Don't have an account
-          <Link
-            className="font-medium ml-2 text-primary hover:underline"
-            to="/auth/register"
-          >
-            Register
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      exit={{ opacity: 0, y: -20 }} 
+      transition={{ duration: 0.5 }}
+      className="flex min-h-screen items-center justify-center bg-gray-100"
+    >
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl grid grid-cols-1 md:grid-cols-2">
+        {/* Sección de información */}
+        <motion.div 
+          initial={{ x: -50, opacity: 0 }} 
+          animate={{ x: 0, opacity: 1 }} 
+          transition={{ duration: 0.5 }}
+          className="p-8 flex flex-col justify-center bg-primary text-white"
+        >
+          <h1 className="text-4xl font-bold">Bienvenido a GoodPet Admin</h1>
+          <p className="mt-4 text-lg">
+            Administra tu negocio con facilidad. Inicia sesión para continuar.
+          </p>
+          <p className="mt-6 text-sm">
+            ¿No tienes una cuenta?
+          </p>
+          <Link to="/auth/register" className="mt-2 inline-block bg-white text-primary font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-200">
+            Regístrate aquí
           </Link>
-        </p>
+        </motion.div>
+
+        {/* Sección del formulario */}
+        <motion.div 
+          initial={{ x: 50, opacity: 0 }} 
+          animate={{ x: 0, opacity: 1 }} 
+          transition={{ duration: 0.5 }}
+          className="p-8 flex flex-col justify-center"
+        >
+          <CommonForm
+            formControls={loginFormControls}
+            buttonText={"Ingresar"}
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={onSubmit}
+          />
+        </motion.div>
       </div>
-      <CommonForm
-        formControls={loginFormControls}
-        buttonText={"Sign In"}
-        formData={formData}
-        setFormData={setFormData}
-        onSubmit={onSubmit}
-      />
-    </div>
+    </motion.div>
   );
 }
 

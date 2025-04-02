@@ -1,21 +1,21 @@
 export const registerFormControls = [
   {
     name: "userName",
-    label: "User Name",
+    label: "Usuario",
     placeholder: "Enter your user name",
     componentType: "input",
     type: "text",
   },
   {
     name: "email",
-    label: "Email",
+    label: "Correo",
     placeholder: "Enter your email",
     componentType: "input",
     type: "email",
   },
   {
     name: "password",
-    label: "Password",
+    label: "Contraseña",
     placeholder: "Enter your password",
     componentType: "input",
     type: "password",
@@ -25,15 +25,15 @@ export const registerFormControls = [
 export const loginFormControls = [
   {
     name: "email",
-    label: "Email",
-    placeholder: "Enter your email",
+    label: "Correo",
+    placeholder: "Ingresa tu correo",
     componentType: "input",
     type: "email",
   },
   {
     name: "password",
-    label: "Password",
-    placeholder: "Enter your password",
+    label: "Contraseña",
+    placeholder: "Ingresa tu contraseña",
     componentType: "input",
     type: "password",
   },
@@ -70,12 +70,12 @@ export const addProductFormElements = [
     name: "brand",
     componentType: "select",
     options: [
-      { id: "nike", label: "Oleos" },
-      { id: "adidas", label: "Canva Americana" },
-      { id: "puma", label: "Canva Algodon" },
-      { id: "levi", label: "Embellecidos" },
-      { id: "zara", label: "Marcos" },
-      { id: "h&m", label: "Fotografias" },
+      { id: "nike", label: "Ropa" },
+      { id: "adidas", label: "Alimentos" },
+      { id: "puma", label: "Medicamnetos" },
+      { id: "levi", label: "Juguetes" },
+      { id: "zara", label: "Accesorios" },
+      { id: "h&m", label: "Otro" },
     ],
   },
   {
